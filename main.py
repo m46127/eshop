@@ -39,15 +39,18 @@ if picking_list_1 and picking_list_2 and inventory_file:
             for sheet_name, sheet_df in inventory_sheets.items():
                 st.write(f"シート名: {sheet_name}")
 
-                if 'JAN' in sheet_df.columns:
+                # 列名をすべて小文字に変換してチェック
+                sheet_df.columns = sheet_df.columns.str.lower()
+
+                if 'jan' in sheet_df.columns:
                     # 数値型として読み込まれた場合に備えて文字列に変換
-                    sheet_df['JAN'] = sheet_df['JAN'].astype(str)
+                    sheet_df['jan'] = sheet_df['jan'].astype(str)
                     
                     # デバッグ用の出力
                     st.write("元のシートデータ:", sheet_df.head())
 
                     # 在庫表のJANとピッキングリストの受注数を結合
-                    result_df = sheet_df.merge(order_summary, on='JAN', how='left')
+                    result_df = sheet_df.merge(order_summary, on='jan', how='left')
                     result_df['受注数'] = result_df['受注数'].fillna(0).astype(int)
                     
                     # デバッグ用の出力
